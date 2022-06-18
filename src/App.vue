@@ -1,5 +1,14 @@
-<script setup lang="ts"></script>
+<template>
+	<Header />
+	<div class="container">
+		<Sessions />
+	</div>
+</template>
 
-<template></template>
+<script setup lang="ts">
 
-<style></style>
+</script>
+
+<style lang="scss">
+@import '@/assets/main.scss';
+</style>

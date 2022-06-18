@@ -5,7 +5,15 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AddButton: typeof import('./src/components/AddButton.vue')['default']
+    AddSessionButton: typeof import('./src/components/AddSessionButton.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Loader: typeof import('./src/components/Loader.vue')['default']
+    NewSession: typeof import('./src/components/NewSession.vue')['default']
+    Session: typeof import('./src/components/Session.vue')['default']
+    Sessions: typeof import('./src/components/Sessions.vue')['default']
+    Tracker: typeof import('./src/components/Tracker.vue')['default']
   }
 }
 
