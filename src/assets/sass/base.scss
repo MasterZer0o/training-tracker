@@ -1,0 +1,30 @@
+:root {
+	--bg: #2e3440;
+	--text: #e5e9f0;
+	--primary: #15616d;
+}
+
+::-webkit-scrollbar {
+	width: 4px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: var(--primary);
+	border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #888787;
+}
+:where(::before, ::after) {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	background-color: var(--bg);
+}
+* {
+	font-family: 'Karla', sans-serif;
+}
