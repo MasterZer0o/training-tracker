@@ -1,20 +1,15 @@
 <template>
-	<Header />
+	<TheHeader />
 	<div class="container">
 		<Sessions />
-		<Error v-if="is" />
+		<Error v-if="isError" :message="errorMessage" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-
-let is = ref(false);
-setTimeout(() => {
-	is.value = true;
-}, 1000);
+import { isError, errorMessage } from './store';
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/main.scss';
+@use '@/assets/sass/main.scss';
 </style>
