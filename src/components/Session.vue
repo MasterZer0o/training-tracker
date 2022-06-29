@@ -18,43 +18,59 @@
 		/>
 		<img v-if="hideSubmit && !loader" class="edit-icon" @click="toggleEditing" src="../assets/edit.svg" alt="" />
 		<img v-if="editing" @click="updateSession($event)" class="edit-icon" src="../assets/checkbox.svg" alt="" />
+
+		<img v-if="updateError" src="../assets/alert.svg" alt="" />
+
 		<Loader v-if="loader" />
 	</td>
 	<td v-else>
-		<img v-if="!loader" class="edit-icon" @click="toggleEditing" src="../assets/edit.svg" alt="" />
+		<img v-if="!loader && !updateError" class="edit-icon" @click="toggleEditing" src="../assets/edit.svg" alt="" />
 
-		<img v-if="editing" @click="updateSession($event)" class="edit-icon" src="../assets/checkbox.svg" alt="" />
+		<img v-if="editing" @click="_updateSession" class="edit-icon" src="../assets/checkbox.svg" alt="" />
+		<img v-if="updateError" src="../assets/alert.svg" alt="" />
 		<Loader v-if="loader" />
 	</td>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { editNewContent } from '../composables/newSession';
 import { isError } from '../store';
-const editing = ref(null);
+import updateSession from '../composables/updateSession';
+import type { Session } from '../composables/session';
+const editing = ref(false);
 const loader = ref(false);
 const hideSubmit = ref(false);
+const updateError = ref(false);
 
-function toggleEditing(e) {
-	e.stopPropagation();
-	if (editing.value == null) return (editing.value = true);
-	else return (editing.value = null);
+const section = ref(null),
+	date = ref(null),
+	timeStart = ref(null),
+	timeEnd = ref(null),
+	duration = ref(null);
+
+const data: Session = { section, date, timeStart, timeEnd, duration };
+const _updateSession = (e: Event) => updateSession(e, editing, loader, updateError, data);
+
+function toggleEditing(event: Event) {
+	event.stopPropagation();
+	if (editing.value == false) return (editing.value = true);
+	else return (editing.value = false);
 }
 
 async function submitNewSession() {
 	try {
 		hideSubmit.value = true;
 		loader.value = true;
-		const { section, date, timeStart, timeEnd, duration } = this.$refs;
+
 		const path = `${location.protocol}//${location.hostname}/main`;
 		let session = {
 			id: Math.floor(Math.random() * 100000),
-			section: section.textContent,
-			date: date.textContent,
-			timeStart: timeStart.textContent,
-			timeEnd: timeEnd.textContent,
-			duration: duration.textContent
+			section: section.value.textContent,
+			date: date.value.textContent,
+			timeStart: timeStart.value.textContent,
+			timeEnd: timeEnd.value.textContent,
+			duration: duration.value.textContent
 		};
 		await fetch(path, {
 			method: 'POST',
@@ -63,36 +79,12 @@ async function submitNewSession() {
 		});
 		loader.value = false;
 	} catch (error) {
-		this.$emit('isError', true);
+		console.error(error);
+		loader.value = false;
+		updateError.value = true;
 	}
 }
-async function updateSession(e) {
-	try {
-		editing.value = null;
-		loader.value = true;
-		let path = `${window.location.protocol}//${window.location.hostname}/editfile`;
-		let id = e.target.parentElement.parentElement.dataset.id;
-		const { section, date, timeStart, timeEnd, duration } = this.$refs;
 
-		let session = {
-			id,
-			section: section.textContent,
-			date: date.textContent,
-			timeStart: timeStart.textContent,
-			timeEnd: timeEnd.textContent,
-			duration: duration.textContent
-		};
-		await fetch(path, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(session)
-		});
-		loader.value = false;
-	} catch (error) {
-		this.$emit('isError', true);
-	}
-}
-defineEmits(['isError']);
 defineProps({
 	session: Object,
 	isNew: Boolean
