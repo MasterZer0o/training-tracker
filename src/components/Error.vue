@@ -1,7 +1,13 @@
 <template>
-	<div class="error-box">
-		<span class="error-box__message">Failed to update session</span>
+	<div class="error-box" @click="isError = false">
+		<span class="error-box__message">{{ message }}</span>
 	</div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { isError } from '../store';
+
+defineProps({
+	message: String
+});
+</script>
