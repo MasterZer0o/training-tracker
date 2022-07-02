@@ -1,20 +1,21 @@
-export default function calculateDuration(): void {
+export default function calculateDuration(target: any) {
 	const regexp = /\d:\d{1,2}/g;
+	const timeEndCell: Node = target.classList.contains('timeStart') ? target.nextSibling : target;
+	const durationCell: Node = timeEndCell.nextSibling;
+	const timeStartCell: Node = timeEndCell.previousSibling;
+
 	setTimeout(() => {
-		if (
-			document.querySelector<HTMLElement>('.timeEnd').textContent.match(regexp) &&
-			document.querySelector<HTMLElement>('.timeStart').textContent.match(regexp)
-		) {
+		if (timeEndCell.textContent.match(regexp) && timeStartCell.textContent.match(regexp)) {
 			const dateNow: Date = new Date(Date.now());
 			const year: number = dateNow.getFullYear();
 			const month: number = dateNow.getMonth();
 			const day: number = dateNow.getDay();
 
-			const timeStart = document.querySelector('.timeStart').textContent.split(':');
+			const timeStart = timeStartCell.textContent.split(':');
 			const timeStartHour: number = parseInt(timeStart[0]);
 			const timeStartMinutes: number = parseInt(timeStart[1]);
 
-			const timeEnd = document.querySelector('.timeEnd').textContent.split(':');
+			const timeEnd = timeEndCell.textContent.split(':');
 			const timeEndHour: number = parseInt(timeEnd[0]);
 			const timeEndMinutes: number = parseInt(timeEnd[1]);
 
@@ -27,12 +28,12 @@ export default function calculateDuration(): void {
 			const differenceHours = Math.floor(difference / 60);
 			const differenceMinutes = difference % 60;
 
-			document.querySelector('.duration').textContent =
+			durationCell.textContent =
 				differenceHours === 0 ? `${differenceMinutes}m` : `${differenceHours}h ${differenceMinutes}m`;
 		} else {
 			setTimeout(() => {
-				document.querySelector('.duration').textContent = 'invalid';
-			}, 1000);
+				durationCell.textContent = 'invalid';
+			}, 500);
 		}
-	}, 1000);
+	}, 500);
 }
