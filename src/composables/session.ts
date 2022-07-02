@@ -1,3 +1,4 @@
+import { BASE_URL } from '../cfg';
 export interface Session {
 	id?: number;
 	section: string;
@@ -10,12 +11,14 @@ export interface Session {
 
 export async function getSessions(): Promise<Session[]> {
 	try {
-		const path = `${window.location.protocol}//${window.location.hostname}:5000/main`;
+		const path: string = `${BASE_URL}/sessions`;
 		const response = await fetch(path);
 		const data = await response.json();
 
+		if ('error' in data) throw data;
+
 		return data.reverse();
 	} catch (error) {
-		Promise.reject(error);
+		return Promise.reject(error);
 	}
 }
