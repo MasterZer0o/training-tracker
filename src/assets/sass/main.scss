@@ -1,61 +1,12 @@
 @use './components/error';
-:root {
-	--bg: #2e3440;
-	--text: #e5e9f0;
-	--primary: #15616d;
-}
+@use './base.scss';
+@use './components/header.scss';
 $td-bg: hsl(220, 17%, 30%);
-
-::-webkit-scrollbar {
-	width: 4px;
-}
-::-webkit-scrollbar-thumb {
-	background-color: var(--primary);
-	border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-	background: #888787;
-}
-:where(::before, ::after) {
-	box-sizing: border-box;
-}
-
-html,
-body {
-	box-sizing: border-box;
-	padding: 0;
-	margin: 0;
-	background-color: var(--bg);
-}
-* {
-	font-family: 'Karla', sans-serif;
-}
+$td-bg-lighter: hsl(220, 17%, 36%);
 
 #app {
 	color: var(--text);
 	width: 100%;
-}
-header {
-	padding-top: 1em;
-	width: 100%;
-	text-align: center;
-	h1 {
-		margin: 0;
-	}
-}
-
-.btn {
-	height: max-content;
-	margin: 0 0 20px auto;
-	display: block;
-	padding: 0em 1em;
-	background-color: hsl(220, 16%, 33%);
-	border: none;
-	border-radius: 4px;
-	font-weight: bold;
-	font-size: 2em;
-	cursor: pointer;
-	color: var(--text);
 }
 
 .container {
@@ -73,9 +24,10 @@ td {
 .headers-row {
 	position: sticky;
 	top: -1px;
+	z-index: 1;
 }
 th {
-	padding: 0.4em;
+	padding: 0.4em 0.8em;
 	background-color: #15616d;
 	max-width: 115px;
 	position: relative;
@@ -98,6 +50,8 @@ td {
 	border-right: 1px solid #5e81ac;
 	max-width: 85px;
 	word-wrap: break-word;
+	transition: background-color 800ms ease-in-out;
+	outline: none;
 
 	&:last-child {
 		border-right: none;
@@ -109,32 +63,41 @@ td {
 	border-top: 5px solid var(--bg);
 }
 .edit-icon {
-	background: $td-bg;
+	background-color: $td-bg;
 	height: 100%;
 	cursor: pointer;
-	transition: transform 0.1s ease-in-out;
+	transition: transform 0.1s ease-in-out, background-color 800ms ease-in-out;
 	user-select: none;
 }
 .edit-icon:hover {
 	transform: scale(0.96);
 }
-
-.row td:first-child,
 thead th:first-child {
-	border-radius: 5px 0 0 10px;
+	border-radius: 7px 0 0 10px;
 	overflow: hidden;
 }
-
-.row td:last-child,
 thead th:last-child {
+	border-radius: 0 7px 10px 0;
 	overflow: hidden;
-	border-radius: 0px 5px 10px 0px;
+}
+.row td:first-child {
+	border-radius: 9px 0 0 10px;
+	position: relative;
+}
+
+.row td:last-child {
+	overflow: hidden;
+	border-radius: 0px 9px 10px 0px;
+	width: 30px;
 }
 
 @media only screen and (max-width: 400px) {
 	table {
 		font-size: clamp(0.4em, 4vw, 24px);
 		width: 100vw;
+	}
+	th {
+		padding: 0.6em 0.2em;
 	}
 	.btn {
 		margin-right: 0.5em;
@@ -148,6 +111,11 @@ td:first-child {
 .duration {
 	font-weight: bold;
 	padding: 0.4em 0.3em;
+}
+
+.alert-icon {
+	display: block;
+	margin: auto;
 }
 
 .spinner {
@@ -170,7 +138,13 @@ td:first-child {
 	background: #5e81ac;
 	background: rgb(63, 249, 220);
 	background: linear-gradient(0deg, rgba(63, 249, 220, 0.1) 33%, rgba(63, 249, 220, 1) 100%);
-	animation: spin 0.8s linear 0s infinite;
+	animation: spin 0.6s linear 0s infinite;
+}
+
+tr.new-session {
+	td {
+		background-color: $td-bg-lighter;
+	}
 }
 
 td .circle-border {
@@ -186,12 +160,25 @@ td .circle-border {
 	background-color: hsl(220, 17%, 27%);
 	border-radius: 50%;
 }
-
-.sessions-counter {
-	position: relative;
-	top: 0.5em;
-	font-size: 1.2em;
-	float: left;
+.section-options {
+	position: absolute;
+	left: 0px;
+	top: 100%;
+	z-index: 15;
+	background-color: hsl(220deg, 17%, 27%);
+	box-shadow: 0px 1px 5px 1px hsl(220deg, 17%, 30%);
+	ul {
+		padding: 0.3em 0.6em;
+		margin: 0;
+		li {
+			list-style-type: none;
+			padding: 0.3em;
+			cursor: pointer;
+			&:hover {
+				background-color: hsl(220deg, 17%, 29%);
+			}
+		}
+	}
 }
 
 @keyframes spin {
