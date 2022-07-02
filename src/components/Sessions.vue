@@ -1,50 +1,66 @@
 <template>
-	<h2 style="font-weight: bold; color: red; text-align: center" v-if="isError">Error occured</h2>
-	<span class="sessions-counter" v-if="!isError">{{ sessions.length }}</span>
-	<Add-Session-button />
-	<table>
-		<thead>
-			<tr class="headers-row">
-				<th>Partia</th>
-				<th>data</th>
-				<th>od</th>
-				<th>do</th>
-				<th>czas trwania</th>
-				<th></th>
-			</tr>
-		</thead>
+	<div class="upper">
+		<span class="sessions-counter" v-if="sessions.length > 0 && !isLoading">{{ sessions.length }}</span>
+		<RefreshButton v-show="!errorCritical && !isLoading" @click="refresh" />
+		<Add-Session-button v-if="!isLoading && !errorCritical" />
+	</div>
+	<Loader v-if="isLoading && isError == false && errorCritical == false" />
 
-		<tbody>
-			<tr :data-id="session.id" :key="session.id" v-for="session in sessions" class="row">
-				<Session :isNew="session.isNew" :session="session" />
-			</tr>
-		</tbody>
-	</table>
+	<transition name="showUp">
+		<table :style="isLoading || errorCritical ? 'margin-top:2em;' : null">
+			<Headers />
 
-	<Loader v-if="isLoading && isError == false" />
+			<tbody>
+				<tr
+					:data-id="session.id"
+					:key="session.id"
+					v-for="session in sessions"
+					:class="['row', session.isNew ? 'new-session' : null]"
+				>
+					<Session :key="session.id" :isNew="session.isNew" :session="session" />
+				</tr>
+			</tbody>
+		</table>
+	</transition>
+	<h2 style="font-weight: bold; color: red; text-align: center" v-if="errorCritical">{{ criticalErrorMessage }}</h2>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, provide } from 'vue';
 import { getSessions } from '../composables/session';
-import { isLoading } from '../store';
+import { isLoading, isError, errorMessage } from '../store';
 import type { Session } from '../composables/session';
-const sessions = ref([]);
+import { criticalErrorMessage } from '../cfg';
+const sessions = ref<Session[]>([]);
+const errorCritical = ref<boolean>(false);
+
 defineProps({
 	sessions: Array,
 	isNew: Boolean
 });
+async function refresh(e: any) {
+	isError.value = false;
+	e.target.classList.toggle('refreshing');
+	emit('refresh');
+	await _getSessions();
+	e.target.classList.toggle('refreshing');
+}
+
 onMounted(async () => {
+	_getSessions();
+});
+async function _getSessions() {
 	try {
 		isLoading.value = true;
+
 		const data: Session[] = await getSessions();
 
 		sessions.value = data;
-		isLoading.value = false;
 	} catch (error) {
-		isError.value = true;
+		errorCritical.value = true;
 	}
-});
+	isLoading.value = false;
+}
+const emit = defineEmits(['refresh']);
 provide('sessions', sessions);
-const isError = ref(false);
 </script>
