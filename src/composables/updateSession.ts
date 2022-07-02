@@ -1,12 +1,14 @@
 import { Ref } from 'vue';
+import { BASE_URL } from '../cfg';
+import { isError, errorMessage } from '../store';
 import { Session } from './session';
 
 export default async function updateSession(e: any, editing: Ref, loader: Ref, updateError: Ref, data: Session) {
 	try {
-		editing.value = false;
+		editing.value = null;
 		loader.value = true;
-		const path = `${window.location.protocol}//${window.location.hostname}/editfile`;
-		let id = e.target.parentElement.parentElement.dataset.id;
+		const path = `${BASE_URL}/editsession`;
+		const id = e.target.parentElement.parentElement.dataset.id;
 		const { section, date, timeStart, timeEnd, duration }: any = data;
 
 		const session: Session = {
@@ -18,14 +20,21 @@ export default async function updateSession(e: any, editing: Ref, loader: Ref, u
 			duration: duration.value.textContent
 		};
 
-		await fetch(path, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(session)
-		});
+		const response = await (
+			await fetch(path, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(session)
+			})
+		).json();
+
+		if ('error' in response) throw response;
+
 		loader.value = false;
-	} catch (error) {
+	} catch (error: any) {
 		loader.value = false;
+		isError.value = true;
+		errorMessage.value = 'failed to edit session';
 		updateError.value = true;
 	}
 }
