@@ -1,22 +1,28 @@
 <template>
 	<td
 		autofocus
-		class="section"
-		@click="editNewContent"
-		@focus="editNewContent"
+		:class="['section', editing ? 'editing-session' : '']"
+		@click="editNewContent($event, isNew)"
+		@focus="editNewContent($event, isNew)"
 		ref="section"
 		:contenteditable="isNew || editing"
 	>
 		{{ session.section }}
 	</td>
 
-	<td class="date" @click="editNewContent" @focus="editNewContent" ref="date" :contenteditable="isNew || editing">
+	<td
+		class="date"
+		@click="editNewContent($event, isNew)"
+		@focus="editNewContent($event, isNew)"
+		ref="date"
+		:contenteditable="isNew || editing"
+	>
 		{{ session.date }}
 	</td>
 	<td
 		class="timeStart"
-		@click="editNewContent"
-		@focus="editNewContent"
+		@click="editNewContent($event, isNew)"
+		@focus="editNewContent($event, isNew)"
 		ref="timeStart"
 		:contenteditable="isNew || editing"
 	>
@@ -24,8 +30,8 @@
 	</td>
 	<td
 		class="timeEnd"
-		@click="editNewContent"
-		@focus="editNewContent"
+		@click="editNewContent($event, isNew)"
+		@focus="editNewContent($event, isNew)"
 		ref="timeEnd"
 		:contenteditable="isNew || editing"
 		@dblclick="insertTimeNow"
@@ -91,6 +97,7 @@ function insertTimeNow(e: any) {
 			new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes()
 		}`;
 		calculateDuration(e.target);
+		e.target.blur();
 	}
 }
 
