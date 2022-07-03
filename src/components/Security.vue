@@ -1,14 +1,21 @@
 <template>
 	<div class="wrapper">
 		<div>
-			<p v-if="authError.is" style="text-align: center; color: red; font-size: 1.3em">{{ authError.message }}</p>
-			<input ref="input" v-model="pass" type="password" data-security-input />
+			<p v-if="error.status" style="text-align: center; color: red; font-size: 1.3em">{{ error.status }}</p>
+			<input
+				:style="error.is && !error.status ? 'outline:3px solid #BF616A' : null"
+				ref="input"
+				v-model="pass"
+				type="password"
+				data-security-input
+			/>
 			<button @click="passAuth">&rarr;</button>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 const input = ref(null);
 const pass = ref('');
@@ -17,11 +24,11 @@ function passAuth() {
 	if (pass.value === '') return input.value.focus();
 	emit('requestAuth', pass.value);
 }
-
-defineProps<{
+const error = computed(() => props.authError);
+const props = defineProps<{
 	authError: {
 		is: boolean;
-		message: string;
+		status?: string;
 	};
 }>();
 const emit = defineEmits(['requestAuth']);
