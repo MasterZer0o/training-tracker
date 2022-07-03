@@ -17,8 +17,8 @@ const securityCheckPassed = ref(false);
 const SecurityBox = defineAsyncComponent(() => import('./components/Security.vue'));
 const authError = ref<{
 	is: boolean;
-	message: string;
-}>({ is: false, message: '' });
+	status?: string;
+}>({ is: false });
 onMounted(async () => {
 	const code = localStorage.getItem('pass');
 	if (code) return (securityCheckPassed.value = true);
@@ -39,17 +39,19 @@ async function handleAuth(pass: string) {
 				localStorage.setItem('pass', Math.random().toString(36).slice(2));
 			} else {
 				authError.value = {
-					is: true,
-					message: 'Incorrect password'
+					is: true
 				};
 			}
 		}
 	} catch (error) {
 		authError.value = {
 			is: true,
-			message: 'Error ocured'
+			status: 'Error ocured'
 		};
 	}
+}
+if ('scrollRestoration' in history) {
+	history.scrollRestoration = 'manual';
 }
 </script>
 
