@@ -5,7 +5,7 @@ export default async function getSessions(req: Request, res: Response) {
 	res.header('Access-Control-Allow-Origin', '*');
 	try {
 		const file = await fs.readFile('./api/sessions.json', { encoding: 'utf-8' });
-		res.json(JSON.parse(file));
+		res.json(JSON.parse(file)).status(200);
 	} catch (error) {
 		console.log(error);
 
