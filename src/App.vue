@@ -1,4 +1,5 @@
 <template>
+	<button @click="closeApp" v-if="showClose" class="close-app">&#10006;</button>
 	<TheHeader v-if="securityCheckPassed" />
 	<transition name="showUp">
 		<div v-if="securityCheckPassed" class="container">
@@ -52,6 +53,13 @@ async function handleAuth(pass: string) {
 }
 if ('scrollRestoration' in history) {
 	history.scrollRestoration = 'manual';
+}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+const showClose = window.matchMedia('(display-mode: standalone)').matches ? true : false;
+
+function closeApp() {
+	close();
 }
 </script>
 
