@@ -17,7 +17,7 @@ export function editNewContent(e: any, isNew: boolean = true): void {
 export function addPlaceholder(sessions: Ref<Session[]>): void {
 	const sessionPlaceholder: Session = {
 		id: Date.now(),
-		section: 'part',
+		section: '',
 		date: new Date().toLocaleDateString('pl'),
 		timeStart: `${new Date().getHours()}:${
 			new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes()
