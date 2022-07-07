@@ -8,6 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+server
+credentials.json
+token.json
+
+
 dist
 dist-ssr
 *.local
@@ -23,3 +28,5 @@ sessions.json
 *.njsproj
 *.sln
 *.sw?
+
+
