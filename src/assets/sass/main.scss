@@ -178,3 +178,17 @@ td .circle-border {
 	background-color: hsl(188, 68%, 21%);
 	transition: background-color 100ms ease-in-out;
 }
+
+button.close-app {
+	--pos: 0.5em;
+	border: none;
+	border-radius: 4px;
+	background-color: #bf616a;
+	position: absolute;
+	color: var(--text);
+	padding: 0.25em 0.3em;
+	line-height: 100%;
+	font-size: 1em;
+	right: var(--pos);
+	top: var(--pos);
+}
