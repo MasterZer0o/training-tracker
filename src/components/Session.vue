@@ -1,6 +1,5 @@
 <template>
 	<td
-		autofocus
 		:class="['section', editing ? 'editing-session' : '']"
 		@click="editNewContent($event, isNew)"
 		@focus="editNewContent($event, isNew)"
@@ -147,7 +146,18 @@ const props = defineProps<{
 }>();
 isNew.value = props.isNew ? true : false;
 onMounted(() => {
-	props.session.isNew ? section.value.focus() : null;
+	// section.value.focus()
+
+	props.session.isNew
+		? (() => {
+				const [...els]: any = document.querySelectorAll('.new-session td:first-child');
+
+				const el: HTMLInputElement = els.pop();
+				setTimeout(() => {
+					el.focus();
+				}, 0);
+		  })()
+		: null;
 
 	// ensure new session row comes at the top
 	props.isNew
