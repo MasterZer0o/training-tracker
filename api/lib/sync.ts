@@ -2,10 +2,11 @@ import { drive_v3, google } from 'googleapis';
 import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import { Credentials, OAuth2Client } from 'google-auth-library';
+const prefix = process.env.NODE_ENV === 'development' ? 'api' : 'server';
 
 export default async function sync() {
 	try {
-		const credentials = (await fs.readFile('api/credentials.json')).toString();
+		const credentials = (await fs.readFile(`${prefix}/credentials.json`)).toString();
 
 		return authorize(JSON.parse(credentials).installed, (auth: any) => editRemoteFile(auth));
 	} catch (error) {
@@ -78,7 +79,8 @@ async function editRemoteFile(auth: OAuth2Client) {
 		const drive = google.drive({ version: 'v3', auth });
 
 		const remoteFile = await getRemoteFile(auth);
-		const file = await fs.readFile('api/sessions.json', { encoding: 'utf-8' });
+
+		const file = await fs.readFile(`${prefix}/sessions.json`, { encoding: 'utf-8' });
 		remoteFile?.data ? (remoteFile.data = JSON.parse(file) as drive_v3.Schema$File) : null;
 
 		//prettier-ignore
