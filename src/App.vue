@@ -7,7 +7,7 @@
 			<Error v-if="isError" :message="errorMessage" />
 		</div>
 	</transition>
-	<SecurityBox :authError="authError" @requestAuth="handleAuth" v-if="!securityCheckPassed" />
+	<SecurityBox :authError="authError" @requestAuth="handleAuth" v-if="!securityCheckPassed && !initialCheck" />
 </template>
 
 <script setup lang="ts">
@@ -15,14 +15,16 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { BASE_URL } from './cfg';
 import { isError, errorMessage } from './store';
 const securityCheckPassed = ref(false);
+const initialCheck = ref(true);
 const SecurityBox = defineAsyncComponent(() => import('./components/Security.vue'));
 const authError = ref<{
 	is: boolean;
 	status?: string;
 }>({ is: false });
-onMounted(async () => {
+onMounted(() => {
 	const code = localStorage.getItem('pass');
 	if (code) return (securityCheckPassed.value = true);
+	else return (initialCheck.value = false);
 });
 async function handleAuth(pass: string) {
 	try {
