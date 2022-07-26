@@ -4,11 +4,11 @@
 	"version": "2.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"build": "vue-tsc --noEmit && vite build",
 		"preview": "vite preview",
-		"api": "nodemon --ignore node_modules/ --ignore api/sessions.json --watch api/ --exec ts-node-esm api/app.ts",
-		"build:server": "npx tsc api/app.ts --outDir server --target esnext --module nodenext"
+		"dev:client": "vite",
+		"dev:api": "SET NODE_ENV=development&&nodemon --ignore node_modules/ --ignore api/sessions.json --watch api/ --exec ts-node-esm api/app.ts",
+		"build:client": "SET NODE_ENV=production&&vue-tsc --noEmit && vite build",
+		"build:server": "SET NODE_ENV=production&&npx tsc api/app.ts --outDir server --target esnext --module nodenext"
 	},
 	"dependencies": {
 		"compression": "^1.7.4",
