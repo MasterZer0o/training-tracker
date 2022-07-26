@@ -1,1 +1,1 @@
-this.addEventListener('fetch', function (event) {});
+self.addEventListener("install",a=>{a.waitUntil(caches.open("pwa-assets").then(a=>a.addAll(["/","assets/refresh.svg","assets/checkbox.svg","assets/edit.svg","assets/alert.svg","assets/style.css","index.js","https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,700;1,400&display=swap"])).catch(a=>console.error(a)))}),this.addEventListener("fetch",a=>{a.respondWith(caches.match(a.request).then(b=>b||fetch(a.request)).then(a=>a.clone()))})
