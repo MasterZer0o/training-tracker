@@ -3,29 +3,38 @@
 	"description": "Training tracker",
 	"display_override": ["standalone", "minimal-ui"],
 	"display": "standalone",
+	"orientation": "portrait-primary",
 	"icons": [
 		{
-			"src": "/favicon.svg",
-			"sizes": "any"
-		},
-		{
-			"src": "/icon512.svg",
-			"sizes": "512x512",
-			"purpose": "any"
-		},
-		{
-			"src": "/192.png",
-			"sizes": "192x192",
-			"purpose": "any"
-		},
-		{
-			"src": "/icon144.svg",
+			"src": "/icons/icon144.svg",
 			"sizes": "144x144",
+			"type": "image/svg+xml",
 			"purpose": "any"
+		},
+
+		{
+			"src": "/icons/icon192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+
+		{
+			"src": "/icons/icon512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/icons/maskable_icon_x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
 		}
 	],
 	"name": "Tracker",
 	"short_name": "Tracker",
-	"start_url": "/index.html",
-	"theme_color": "#2e3440"
+	"start_url": "/",
+	"theme_color": "#2e3440",
+	"id": "/index.html"
 }
