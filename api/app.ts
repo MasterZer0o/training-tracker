@@ -14,9 +14,14 @@ const app = express();
 env.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
-app.use(compression());
+app.use(
+	helmet({
+		crossOriginResourcePolicy: false,
+		contentSecurityPolicy: false
+	})
+);
 
+app.use(compression());
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.options('/addsession', cors<any>());
 app.options('/editsession', cors<any>());
@@ -29,7 +34,6 @@ app.use(express.static(join(`${__dirname}/../dist/`), { maxAge: '30 days' }));
 app.post('/auth', (req: Request, res: Response) => {
 	try {
 		res.header('Access-Control-Allow-Origin', '*');
-
 		if (req.body.pass === process.env.pass) res.json('passed');
 		else res.json('failed');
 	} catch (error) {
