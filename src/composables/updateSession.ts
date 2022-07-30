@@ -13,7 +13,7 @@ export default async function updateSession(e: any, editing: Ref, loader: Ref, u
 
 		const session: Session = {
 			id,
-			section: section.value.textContent,
+			section: section.value.querySelector('span').textContent,
 			date: date.value.textContent,
 			timeStart: timeStart.value.textContent,
 			timeEnd: timeEnd.value.textContent,
