@@ -16,6 +16,7 @@
 					:key="session.id"
 					v-for="session in sessions"
 					:class="['row', session.isNew ? 'new-session' : null]"
+					spellcheck="false"
 				>
 					<Session :key="session.id" :isNew="session.isNew" :session="session" />
 				</tr>
