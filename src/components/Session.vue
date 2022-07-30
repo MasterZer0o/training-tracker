@@ -1,12 +1,22 @@
 <template>
-	<td
-		:class="['section', editing ? 'editing-session' : '']"
-		@click="editNewContent($event, isNew)"
-		@focus="editNewContent($event, isNew)"
-		ref="section"
-		:contenteditable="isNew || editing"
-	>
-		{{ session.section }}
+	<td :class="['section', editing ? 'editing-session' : '']" @dblclick="triggerSectionOptions" ref="section">
+		<span :contenteditable="isNew || editing" style="display: block; height: 100%; outline: none">
+			{{ session.section }}</span
+		>
+		<transition name="slide">
+			<ul
+				@click="insertSection"
+				v-show="showSectionOptions"
+				class="section-options"
+				spellcheck="false"
+				contenteditable="false"
+			>
+				<li data-section="barki">barki</li>
+				<li data-section="klata">klata</li>
+				<li data-section="plecy">plecy</li>
+				<li data-section="nogi">nogi</li>
+			</ul>
+		</transition>
 	</td>
 
 	<td
@@ -76,6 +86,7 @@ import type { Session } from '../composables/session';
 import { isError, errorMessage } from '../store';
 import { BASE_URL } from '../cfg';
 import calculateDuration from '../composables/calculateDuration';
+import { computed } from '@vue/reactivity';
 
 const editing = ref<null | true>(null);
 const loader = ref(false);
@@ -91,7 +102,7 @@ const data: Session = { section, date, timeStart, timeEnd, duration };
 const _updateSession = (e: Event) => updateSession(e, editing, loader, updateError, data);
 
 function insertTimeNow(e: any) {
-	if (editing.value == true) {
+	if (editing.value === true) {
 		e.target.textContent = `${new Date().getHours()}:${
 			new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes()
 		}`;
@@ -100,10 +111,25 @@ function insertTimeNow(e: any) {
 	}
 }
 
+function insertSection(event: any) {
+	showSectionOptions.value = !showSectionOptions.value;
+	const sectionCell = section.value as HTMLElement;
+	sectionCell.querySelector('span').textContent = event.target.dataset.section;
+}
+
+const showSectionOptions = ref(false);
+const canOpenSectionOptions = computed(() => isNew.value);
+function triggerSectionOptions() {
+	if (editing.value || canOpenSectionOptions.value) showSectionOptions.value = !showSectionOptions.value;
+}
+
 function toggleEditing(event: Event) {
 	event.stopPropagation();
 	if (editing.value == null) return (editing.value = true);
-	else return (editing.value = null);
+	else {
+		editing.value = null;
+		showSectionOptions.value = false;
+	}
 }
 async function submitNewSession(e: any) {
 	const currentRow = e.target.closest('tr');
@@ -113,9 +139,9 @@ async function submitNewSession(e: any) {
 		loader.value = true;
 
 		const path = `${BASE_URL}/addsession`;
-		const session = {
+		const session: Session = {
 			id: currentRow.dataset.id,
-			section: section.value.textContent,
+			section: section.value.querySelector('span').textContent,
 			date: date.value.textContent,
 			timeStart: timeStart.value.textContent,
 			timeEnd: timeEnd.value.textContent,
@@ -147,10 +173,9 @@ const props = defineProps<{
 isNew.value = props.isNew ? true : false;
 onMounted(() => {
 	// section.value.focus()
-
 	props.session.isNew
 		? (() => {
-				const [...els]: any = document.querySelectorAll('.new-session td:first-child');
+				const [...els]: any = document.querySelectorAll('.new-session td:first-child span');
 
 				const el: HTMLInputElement = els.pop();
 				setTimeout(() => {
@@ -171,5 +196,16 @@ onMounted(() => {
 <style scoped>
 .spinner {
 	margin: 0;
+}
+.slide-enter-active,
+.slide-leave-active {
+	transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+	transform: translateY(0px);
+}
+
+.slide-enter-from,
+.slide-leave-to {
+	opacity: 0;
+	transform: translateY(20px);
 }
 </style>
