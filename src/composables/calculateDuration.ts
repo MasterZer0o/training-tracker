@@ -22,7 +22,6 @@ export default function calculateDuration(target: any) {
 			const d1: any = new Date(year, month, day, timeStartHour, timeStartMinutes, 0, 0);
 			const d2: any = new Date(year, month, day, timeEndHour, timeEndMinutes, 0, 0);
 
-			console.log((d2 - d1) / 1000 / 60 + ' ' + 'minutes');
 			const difference = (d2 - d1) / 1000 / 60;
 
 			const differenceHours = Math.floor(difference / 60);
