@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-
-
-createApp(App).mount('#app');
+import errorHandler from './composables/errorHandler';
+const app = createApp(App);
+app.config.errorHandler = errorHandler;
+app.mount('#app');
