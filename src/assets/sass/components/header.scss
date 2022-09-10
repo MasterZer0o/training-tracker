@@ -12,7 +12,6 @@ header {
 		margin: 0;
 	}
 }
-
 .sessions-counter {
 	top: 0.5em;
 	font-size: 1.2em;
@@ -22,7 +21,7 @@ header {
 
 .btn {
 	height: max-content;
-	margin-left:auto;
+	margin-left: auto;
 	display: block;
 	padding: 0em 1em;
 	background-color: hsl(220, 16%, 33%);
@@ -32,12 +31,16 @@ header {
 	font-size: 2em;
 	cursor: pointer;
 	color: var(--text);
+	transition: transform 150ms ease-in-out;
+	&:active {
+		transform: scale(0.9);
+	}
 }
 .refresh-icon {
 	cursor: pointer;
 	height: fit-content;
 	&.refreshing {
-		animation: rotate 1000ms infinite;
+		animation: rotate 1000ms ease-in-out infinite forwards;
 	}
 }
 @keyframes rotate {
