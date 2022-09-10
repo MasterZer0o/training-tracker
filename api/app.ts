@@ -8,7 +8,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
-import sync from './lib/runCron.js';
+import reporter from './lib/reporter.js';
+import checkFiles from './lib/checkFiles.js';
 
 const app = express();
 env.config();
@@ -20,12 +21,12 @@ app.use(
 		contentSecurityPolicy: false
 	})
 );
-
 app.use(compression());
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.options('/addsession', cors<any>());
 app.options('/editsession', cors<any>());
 app.options('/auth', cors<any>());
+app.options('/report', cors<any>());
 
 app.get('/sessions', getSessions);
 app.post('/addsession', addSession);
@@ -43,6 +44,15 @@ app.post('/auth', (req: Request, res: Response) => {
 app.get('/', (req: Request, res: Response) => res.sendFile(join(`${__dirname}/../dist/index.html`)));
 
 app.get('/*', (req: Request, res: Response) => res.status(404).send('<h1>404 not found</h1>'));
+if (process.env.NODE_ENV === 'production') {
+	const runCron = await import('./lib/runCron.js');
+	runCron.default();
+}
 
-sync();
-app.listen(process.env.PORT, () => console.log(`Server started on port ${process.env.PORT}`));
+app.post('/report', reporter);
+
+await checkFiles();
+env.config(); //refresh env
+
+const PORT = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined ? 5000 : process.env.NODE_ENV;
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
