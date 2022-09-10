@@ -11,7 +11,7 @@ node_modules
 server
 credentials.json
 token.json
-
+.vscode
 
 dist
 dist-ssr
