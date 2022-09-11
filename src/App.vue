@@ -1,7 +1,12 @@
 <template>
-	<button @click="closeApp" v-if="showClose" class="close-app">&#10006;</button>
+	<button v-if="showClose" @click="closeAppPWA" class="close-app">&#10006;</button>
+	<transition name="ongoing" appear>
+		<OngoingSession v-if="ongoingSession.is && securityCheckPassed" :data="ongoingSession.data" />
+	</transition>
+
 	<TheHeader v-if="securityCheckPassed" />
-	<transition name="showUp">
+
+	<transition name="showUp" appear>
 		<div v-if="securityCheckPassed" class="container">
 			<Sessions />
 			<Error v-if="isError" :message="errorMessage" />
@@ -11,20 +16,38 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, ref } from 'vue';
+import { defineAsyncComponent, onBeforeMount, ref } from 'vue';
+import { AuthError } from '../types';
 import { BASE_URL } from './cfg';
-import { isError, errorMessage } from './store';
-const securityCheckPassed = ref(false);
+import { isError, errorMessage, ongoingSession } from './store';
+
+const securityCheckPassed = ref<boolean>(false);
 const initialCheck = ref(true);
+
+// dynamic components. Get imported only when authenticated.
 const SecurityBox = defineAsyncComponent(() => import('./components/Security.vue'));
-const authError = ref<{
-	is: boolean;
-	status?: string;
-}>({ is: false });
-onMounted(() => {
+const OngoingSession = defineAsyncComponent(() => import('./components/OngoingSession.vue'));
+const Sessions = defineAsyncComponent(() => import('./components/Sessions.vue'));
+const TheHeader = defineAsyncComponent(() => import('./components/TheHeader.vue'));
+const Error = defineAsyncComponent(() => import('./components/Error.vue'));
+const authError = ref<AuthError>({ is: false });
+
+onBeforeMount(async () => {
 	const code = localStorage.getItem('pass');
-	if (code) return (securityCheckPassed.value = true);
-	else return (initialCheck.value = false);
+	if (code) securityCheckPassed.value = true;
+	else initialCheck.value = false;
+
+	if (securityCheckPassed.value === true) {
+		const getOngoing = (await import('./composables/ongoing/getOngoing')).default;
+		const resetOngoing = (await import('./composables/ongoing/resetOngoing')).default;
+		const ongoing = getOngoing();
+		if (ongoing !== null) {
+			ongoingSession.value = {
+				is: ongoing.is,
+				data: ongoing.data
+			};
+		} else resetOngoing();
+	}
 });
 async function handleAuth(pass: string) {
 	try {
@@ -49,20 +72,17 @@ async function handleAuth(pass: string) {
 	} catch (error) {
 		authError.value = {
 			is: true,
-			status: 'Error ocured'
+			status: 'Error occurred'
 		};
 	}
 }
-if ('scrollRestoration' in history) {
-	history.scrollRestoration = 'manual';
-}
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 
 const showClose = window.matchMedia('(display-mode: standalone)').matches ? true : false;
 
-function closeApp() {
-	close();
-}
+const closeAppPWA = () => window.close();
 </script>
 
 <style lang="scss">
@@ -70,7 +90,7 @@ function closeApp() {
 
 .showUp-enter-active,
 .showUp-leave-active {
-	transition: opacity 400ms ease-in-out, transform 400ms ease-in-out;
+	transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
 	transform: translateY(0px);
 }
 
