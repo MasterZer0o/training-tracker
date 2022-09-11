@@ -1,6 +1,7 @@
 @use './components/error';
 @use './base.scss';
 @use './components/header.scss';
+@use './components/ongoing.scss';
 $td-bg: hsl(220, 17%, 30%);
 $td-bg-lighter: hsl(220, 17%, 36%);
 
@@ -13,6 +14,10 @@ $td-bg-lighter: hsl(220, 17%, 36%);
 	width: fit-content;
 	margin: auto;
 	position: relative;
+}
+.date {
+	padding-left: 0.2em;
+	padding-right: 0.2em;
 }
 
 table,
@@ -48,7 +53,7 @@ td {
 	background-color: $td-bg;
 	padding: 0.4em 0.45em;
 	border-right: 1px solid #5e81ac;
-	max-width: 85px;
+	max-width: 90px;
 	word-wrap: break-word;
 	transition: background-color 800ms ease-in-out;
 	outline: none;
@@ -105,6 +110,12 @@ thead th:last-child {
 	.sessions-counter {
 		margin-left: 0.5em;
 	}
+	.date {
+		padding: 0.4em 0.45em;
+	}
+	.ongoing-bar {
+		width: 60% !important;
+	}
 }
 
 td:first-child {
@@ -120,7 +131,6 @@ td:first-child {
 	display: block;
 	margin: auto;
 }
-
 .spinner {
 	width: 100%;
 	height: 100%;
@@ -157,6 +167,9 @@ td .circle-border {
 	height: 15px;
 }
 
+td .spinner {
+	margin: 0;
+}
 .circle-core {
 	width: 100%;
 	height: 100%;
@@ -188,6 +201,7 @@ button.close-app {
 	color: var(--text);
 	padding: 0.25em 0.3em;
 	line-height: 100%;
+	z-index: 12;
 	font-size: 1em;
 	right: var(--pos);
 	top: var(--pos);
@@ -219,4 +233,30 @@ button.close-app {
 			}
 		}
 	}
+}
+.timeEnd {
+	position: relative;
+}
+.timeEnd.dot:not(:focus):after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 10px;
+	height: 10px;
+	background-color: rgb(213, 140, 3);
+	border-radius: 50%;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+	transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+	transform: translateY(0px);
+}
+
+.slide-enter-from,
+.slide-leave-to {
+	opacity: 0;
+	transform: translateY(20px);
 }
