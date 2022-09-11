@@ -1,22 +1,22 @@
 import { drive_v3, google } from 'googleapis';
+import { Credentials, OAuth2Client } from 'google-auth-library';
 import fetch from 'node-fetch';
 import fs from 'fs/promises';
-import { Credentials, OAuth2Client } from 'google-auth-library';
-const prefix = process.env.NODE_ENV === 'development' ? 'api' : 'server';
+const pathPrefix = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined ? 'api' : 'server';
 
 export default async function sync() {
 	try {
-		const credentials = (await fs.readFile(`${prefix}/credentials.json`)).toString();
+		const credentials = await fs.readFile(`${pathPrefix}/credentials.json`, { encoding: 'utf-8' });
 
 		return authorize(JSON.parse(credentials).installed, (auth: any) => editRemoteFile(auth));
 	} catch (error) {
 		await fs.appendFile(
 			'./errors.txt',
 			`-------------------------------------------
-			Error while beginning to sync:
-			${error}
+				Error while beginning to sync:
+				${error}
 -------------------------------------------
-			\n \n`
+\n \n`
 		);
 	}
 }
@@ -35,8 +35,8 @@ async function authorize(credentials: any, callback: (...args: any) => any) {
 			`-------------------------------------------
 			Error while authorizing:
 			${error}
-			-------------------------------------------
-			\n \n`
+-------------------------------------------
+\n \n`
 		);
 	}
 }
@@ -66,8 +66,8 @@ async function getAccessToken({ client_id, client_secret }: { client_id: string,
 			`-------------------------------------------
 			Error while getting access token:
 			${error}
-			-------------------------------------------
-			\n \n`
+-------------------------------------------
+\n \n`
 			
 		);
 	}
@@ -80,25 +80,25 @@ async function editRemoteFile(auth: OAuth2Client) {
 
 		const remoteFile = await getRemoteFile(auth);
 
-		const file = await fs.readFile(`${prefix}/sessions.json`, { encoding: 'utf-8' });
+		const file = await fs.readFile(`${process.env.DB_FOLDER_NAME}/sessions.json`, { encoding: 'utf-8' });
 		remoteFile?.data ? (remoteFile.data = JSON.parse(file) as drive_v3.Schema$File) : null;
-
-		//prettier-ignore
-		await drive.files.update({
-			fileId: '13CcbTUTWyEGnJQfy7eaVBTUnIcWj4CRx',
-			media: {
-				mimeType: 'application/json',
-				body: JSON.stringify(remoteFile?.data)
-			}
-		})
+		if (remoteFile !== undefined) {
+			await drive.files.update({
+				fileId: '13CcbTUTWyEGnJQfy7eaVBTUnIcWj4CRx',
+				media: {
+					mimeType: 'application/json',
+					body: JSON.stringify(remoteFile.data)
+				}
+			});
+		} else throw new Error(`Remote file is ${remoteFile}.`);
 	} catch (error) {
 		await fs.appendFile(
 			'./errors.txt',
 			`-------------------------------------------
 			Error while editing remote file:
 			${error}
-			-------------------------------------------
-			\n \n`
+-------------------------------------------
+\n \n`
 		);
 	}
 }
@@ -119,8 +119,9 @@ async function getRemoteFile(auth: OAuth2Client) {
 			`-------------------------------------------
 			Error while getting remote file:
 			${error}
-			-------------------------------------------
-			\n \n`
+-------------------------------------------
+\n \n`
 		);
 	}
 }
+
