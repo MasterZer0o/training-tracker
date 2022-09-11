@@ -28,9 +28,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, provide } from 'vue';
-import { getSessions } from '../composables/session';
+import { getSessions } from '../composables/getSessions';
 import { isLoading, isError, errorMessage } from '../store';
-import type { Session } from '../composables/session';
+import type { Session } from '../../types';
 import { criticalErrorMessage } from '../cfg';
 const sessions = ref<Session[]>([]);
 const errorCritical = ref<boolean>(false);
@@ -40,16 +40,18 @@ defineProps({
 	isNew: Boolean
 });
 async function refresh(e: any) {
-	isError.value = false;
-	e.target.classList.toggle('refreshing');
-	emit('refresh');
-	await _getSessions();
-	e.target.classList.toggle('refreshing');
+	try {
+		isError.value = false;
+		e.target.classList.toggle('refreshing');
+		const data: Session[] = await getSessions();
+		sessions.value = data;
+		e.target.classList.toggle('refreshing');
+	} catch (error) {
+		isError.value = true;
+		errorMessage.value = 'Failed to refresh data.';
+	}
 }
-
-onMounted(async () => {
-	_getSessions();
-});
+onMounted(() => _getSessions());
 async function _getSessions() {
 	try {
 		isLoading.value = true;
@@ -62,6 +64,5 @@ async function _getSessions() {
 	}
 	isLoading.value = false;
 }
-const emit = defineEmits(['refresh']);
 provide('sessions', sessions);
 </script>
