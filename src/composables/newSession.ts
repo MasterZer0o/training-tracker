@@ -1,10 +1,11 @@
 import calculateDuration from './calculateDuration';
-import { Session } from './session';
-import { Ref } from 'vue';
+import type { Session } from '../../types';
+import type { Ref } from 'vue';
 
-export function editNewContent(e: any, isNew: boolean = true): void {
+export function editNewContent(e: any, isNew: boolean = true, showDot: Ref) {
 	if (e.target.hasAttribute('contenteditable')) {
-		e.target.innerText = '';
+		if (e.target.classList.contains('timeEnd')) showDot.value = false;
+		else e.target.innerText = '';
 	} else return;
 
 	if (isNew === true) window.scrollTo({ top: 0 });
@@ -22,7 +23,7 @@ export function addPlaceholder(sessions: Ref<Session[]>): void {
 		timeStart: `${new Date().getHours()}:${
 			new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes()
 		}`,
-		timeEnd: 'end',
+		timeEnd: '',
 		duration: '',
 		isNew: true
 	};
