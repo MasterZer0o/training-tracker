@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"preview": "vite preview",
-		"dev:client": "vite --hos",
+		"dev:client": "vite --host",
 		"dev:api": "conc \"swc --ignore **/**/sessions.json -w api -d dev\" \"SET NODE_ENV=development&&nodemon --ignore dev/sessions.json --watch dev dev/app.js\" ",
 		"build:client": "SET NODE_ENV=production&&vue-tsc --noEmit && vite build",
 		"build:server": "SET NODE_ENV=production&&swc api -d server",
