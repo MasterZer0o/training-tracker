@@ -7,7 +7,6 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddSessionButton: typeof import('./src/components/AddSessionButton.vue')['default']
     Error: typeof import('./src/components/Error.vue')['default']
-    Header: typeof import('./src/components/Header.vue')['default']
     Headers: typeof import('./src/components/Headers.vue')['default']
     Loader: typeof import('./src/components/Loader.vue')['default']
     OngoingSession: typeof import('./src/components/OngoingSession.vue')['default']
