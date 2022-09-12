@@ -39,8 +39,9 @@
 		<img v-if="updateError" src="../assets/alert.svg" class="alert-icon" alt="" />
 
 		<Loader v-if="loader" />
+		
 	</td>
-	<td v-else>
+	<td v-else :class="editing ? 'icons--editing' : null">
 		<img v-show="!loader && !updateError" class="edit-icon" @click="toggleEditing" src="../assets/edit.svg" alt="" />
 
 		<img v-if="editing" @click="_updateSession" class="edit-icon" src="../assets/checkbox.svg" alt="update session" />
