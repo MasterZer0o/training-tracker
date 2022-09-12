@@ -1,9 +1,9 @@
 <template>
 	<div class="wrapper">
 		<div>
-			<p v-if="error.status" style="text-align: center; color: red; font-size: 1.3em">{{ error.status }}</p>
+			<p v-if="authError.status" style="text-align: center; color: red; font-size: 1.3em">{{ authError.status }}</p>
 			<input
-				:style="error.is && !error.status ? 'outline:3px solid #BF616A' : null"
+				:style="authError.is && !authError.status ? 'outline:3px solid #BF616A' : null"
 				ref="input"
 				v-model="pass"
 				type="password"
@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 const input = ref(null);
 const pass = ref('');
@@ -24,8 +23,7 @@ function passAuth() {
 	if (pass.value === '') return input.value.focus();
 	emit('requestAuth', pass.value);
 }
-const error = computed(() => props.authError);
-const props = defineProps<{
+defineProps<{
 	authError: {
 		is: boolean;
 		status?: string;
