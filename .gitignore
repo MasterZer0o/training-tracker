@@ -12,6 +12,7 @@ server
 credentials.json
 token.json
 .vscode
+dev
 
 dist
 dist-ssr
