@@ -54,5 +54,5 @@ app.post('/report', reporter);
 await checkFiles();
 env.config(); //refresh env
 
-const PORT = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined ? 5000 : process.env.NODE_ENV;
+const PORT = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined ? 5000 : process.env.PORT;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
