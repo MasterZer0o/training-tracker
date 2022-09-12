@@ -30,7 +30,8 @@ DB_FOLDER_NAME=db`
 	}
 
 	try {
-		await fs.stat('api/credentials.json');
+		if (process.env.NODE_ENV === 'production') await fs.stat('server/credentials.json');
+		else await fs.stat('api/credentials.json');
 	} catch (error) {
 		console.log("@ api/credentials.json doesn't exist.");
 		console.log('@ Add file manually.');
