@@ -9,3 +9,5 @@ export const ongoingSession = ref<OngoingSession>({
 	is: false,
 	data: { section: '', started: '' }
 });
+
+export const netStatus = ref<'online' | 'offline'>('online');
