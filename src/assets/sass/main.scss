@@ -3,6 +3,8 @@
 @use './components/header.scss';
 @use './components/ongoing.scss';
 @use './components/row.scss';
+@use './components/net_bar.scss';
+
 
 #app {
 	color: var(--text);
@@ -139,5 +141,9 @@ button.close-app {
 		& th:nth-child(1) {
 			padding: 0.4em 0.6em;
 		}
+	}
+
+	.offline-bar {
+		width: 100%;
 	}
 }
