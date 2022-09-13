@@ -1,5 +1,8 @@
 <template>
 	<button v-if="showClose" @click="closeAppPWA" class="close-app">&#10006;</button>
+	<transition name="net" appear>
+		<NetDisconnect v-if="netStatus === 'offline'" />
+	</transition>
 	<transition name="ongoing" appear>
 		<OngoingSession v-if="ongoingSession.is && securityCheckPassed" :data="ongoingSession.data" />
 	</transition>
@@ -19,7 +22,8 @@
 import { defineAsyncComponent, onBeforeMount, ref } from 'vue';
 import { AuthError } from '../types';
 import { BASE_URL } from './cfg';
-import { isError, errorMessage, ongoingSession } from './store';
+import { isError, errorMessage, ongoingSession, netStatus } from './store';
+import handleNet from './composables/handleNet';
 
 const securityCheckPassed = ref<boolean>(false);
 const initialCheck = ref(true);
@@ -33,6 +37,7 @@ const Error = defineAsyncComponent(() => import('./components/Error.vue'));
 const authError = ref<AuthError>({ is: false });
 
 onBeforeMount(async () => {
+	handleNet();
 	const code = localStorage.getItem('pass');
 	if (code) securityCheckPassed.value = true;
 	else initialCheck.value = false;
