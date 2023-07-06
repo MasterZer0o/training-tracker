@@ -1,0 +1,111 @@
+@use '../base.scss' as *;
+td {
+	background-color: $td-bg;
+	padding: 0.4em 0.45em;
+	border-right: 1px solid #5e81ac;
+	max-width: 90px;
+	word-wrap: break-word;
+	transition: background-color 800ms ease-in-out;
+	outline: none;
+	&:first-child {
+		border-radius: 6px 0 0 6px;
+		padding: 0.4em 0.3em;
+	}
+	&:last-child {
+		overflow: hidden;
+		border-radius: 0px 6px 6px 0px;
+		width: 30px;
+		border-right: none;
+		padding: 0;
+	}
+	&.icons--editing {
+		display: grid;
+		place-items: center;
+		gap: 2px;
+		& img:first-child {
+			background-color: #9b232f;
+			height: 22px;
+		}
+	}
+}
+
+.section {
+	position: relative;
+	.section-options {
+		position: absolute;
+		padding: 0;
+		left: 2px;
+		top: 100%;
+		margin: 0;
+		z-index: 100;
+		list-style: none;
+		background-color: #54627c;
+		border-radius: 5px;
+		overflow: hidden;
+		box-shadow: 0px 1px 3px 1px var(--primary);
+		& li {
+			padding: 3px 7px;
+			border-bottom: 1px solid var(--primary);
+			cursor: pointer;
+			&:hover {
+				background-color: #515767;
+			}
+			&:last-child {
+				border: none;
+			}
+		}
+	}
+}
+.date {
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+}
+.duration {
+	font-weight: bold;
+	padding: 0.4em 0.3em;
+}
+
+.timeEnd {
+	position: relative;
+	padding: 0.4em 0.3em;
+}
+
+.timeEnd.dot:not(:focus)::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 10px;
+	height: 10px;
+	background-color: rgb(213, 140, 3);
+	border-radius: 50%;
+}
+
+th {
+	text-align: center;
+	padding: 0.4em 0.8em;
+	background-color: #15616d;
+	max-width: 115px;
+	position: relative;
+	&:first-child {
+		border-radius: 7px 0 0 7px;
+		overflow: hidden;
+	}
+	&:last-child {
+		border-radius: 0 7px 7px 0;
+		overflow: hidden;
+	}
+	// separators in thead
+	&:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 0;
+		width: 2px;
+		height: 70%;
+		border-radius: 4px;
+		background-color: hsl(188, 68%, 33%);
+	}
+}

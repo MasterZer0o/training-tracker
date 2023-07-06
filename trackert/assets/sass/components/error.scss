@@ -1,0 +1,27 @@
+.error-box {
+	position: fixed;
+	bottom: 0%;
+	min-width: 250px;
+	transform: translate(-50%, 100%);
+	left: 50%;
+	transition: transform 200ms ease-in-out;
+	padding: 0.8em 4.5em;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	font-size: 1.1em;
+	background-color: hsl(354, 42%, 43%);
+	animation: show-up 100ms ease-in-out forwards;
+	& span {
+		display: block;
+		text-align: center;
+	}
+}
+
+@keyframes show-up {
+	0% {
+		transform: translate(-50%, 100%);
+	}
+	100% {
+		transform: translate(-50%, 0%);
+	}
+}

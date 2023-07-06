@@ -1,0 +1,34 @@
+:root {
+	--bg: #2e3440;
+	--text: #e5e9f0;
+	--primary: #15616d;
+}
+
+$td-bg: hsl(220, 17%, 30%);
+$td-bg-lighter: hsl(220, 17%, 36%);
+
+::-webkit-scrollbar {
+	width: 4px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: var(--primary);
+	border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #888787;
+}
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	background-color: var(--bg);
+}
+* {
+	font-family: 'Karla', sans-serif;
+}
