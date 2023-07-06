@@ -1,16 +1,23 @@
-export function editNewContent(e: any, isNew = true, showDot: Ref) {
-  if (e.target.hasAttribute('contenteditable')) {
-    if (e.target.classList.contains('timeEnd'))
-      showDot.value = false
-    else e.target.innerText = ''
-  }
-  else return
+import { calculateDuration } from './calculateDuration'
+
+export function editNewContent(e: PointerEvent, isNew = true, showDot: Ref) {
+  const target = e.target as HTMLElement
+
+  if (!target.hasAttribute('contenteditable'))
+    return
+
+  if (target.classList.contains('timeEnd'))
+    showDot.value = false
+  else target.innerText = ''
 
   if (isNew === true)
     window.scrollTo({ top: 0 })
-  const observer = new MutationObserver(() => calculateDuration(e.target))
-  if (e.target.classList.contains('date') || e.target.classList.contains('section'))
-    observer.observe(e.target, { characterData: true, subtree: true })
+
+  const observer = new MutationObserver(() => calculateDuration(e.target as HTMLElement)
+  )
+  if (target.classList.contains('date') || target.classList.contains('section')) {
+    observer.observe(target, { characterData: true, subtree: true })
+  }
 }
 
 export function addPlaceholder(sessions: Ref<Session[]>): void {

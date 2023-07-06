@@ -1,8 +1,8 @@
 <script setup lang="ts">
-defineProps({
-  sessions: Array,
-  isNew: Boolean
-})
+// defineProps<{
+//   sessions: Session[]
+//   isNew: boolean
+// }>()
 
 const criticalErrorMessage = useRuntimeConfig().public.criticalErrorMessage
 
@@ -43,7 +43,7 @@ provide('sessions', sessions)
   <div class="upper">
     <span v-if="sessions.length > 0 && !useLoading().value" class="sessions-counter">{{ sessions.length }}</span>
     <RefreshButton v-show="!errorCritical && !useLoading()" @click="refresh" />
-    <Add-Session-button v-if="!useLoading() && !errorCritical" />
+    <AddSessionButton v-if="!useLoading().value && !errorCritical" />
   </div>
   <Loader v-if="useLoading().value && useIsError().value === false && errorCritical === false" />
 
@@ -59,7 +59,7 @@ provide('sessions', sessions)
           class="row" :class="[session.isNew ? 'new-session' : null]"
           spellcheck="false"
         >
-          <Session :key="session.id" :is-new="session.isNew" :session="session" />
+          <Session :key="session.id" :is-new="session.isNew || false" :session="session" />
         </tr>
       </tbody>
     </table>

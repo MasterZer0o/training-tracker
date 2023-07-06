@@ -1,10 +1,23 @@
 <script setup lang="ts">
+if (process.client) {
+  const ongoing = getOngoing()
+
+  if (ongoing !== null) {
+    useOngoingSession().value = {
+      is: ongoing.is,
+      data: ongoing.data
+    }
+  }
+  else resetOngoing()
+}
 </script>
 
 <template>
-  <transition name="ongoing" appear>
-    <OngoingSession v-if="useOngoingSession().value.is" :data="useOngoingSession().value.data" />
-  </transition>
+  <ClientOnly>
+    <transition name="ongoing" appear>
+      <OngoingSession v-if="useOngoingSession().value.is" :data="useOngoingSession().value.data" />
+    </transition>
+  </ClientOnly>
 
   <TheHeader />
 

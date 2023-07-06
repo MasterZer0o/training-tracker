@@ -3,7 +3,9 @@ defineProps<{
   authError: {
     is: boolean
     status?: string
-  } }>()
+  }
+}>()
+
 const emit = defineEmits(['requestAuth'])
 const inputEl = ref<HTMLInputElement>()
 const pass = ref('')
@@ -21,7 +23,7 @@ function passAuth() {
       <p v-if="authError.status" style="text-align: center; color: red; font-size: 1.3em">
         {{ authError.status }}
       </p>
-      <input ref="inputEl" v-model="pass" :style="authError.is && !authError.status ? 'outline:3px solid #BF616A' : null" type="password" data-security-input />
+      <input ref="inputEl" v-model="pass" :style="authError.is && !authError.status ? 'outline:3px solid #BF616A' : undefined" type="password" />
       <button @click="passAuth">
         &rarr;
       </button>

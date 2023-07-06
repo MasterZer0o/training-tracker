@@ -13,8 +13,9 @@ export default defineEventHandler(async (event) => {
   let currentNumsCount = 0
 
   for (let i = 0; i < charsNumIter; i++) {
-    const isChar = ((Math.floor(Math.random() * 10) % 2 === 0) && currentCharsCount !== passCharLength) || currentNumsCount === passNumLength
-    // TODO: it works - cleanup
+    const isChar = ((Math.floor(Math.random() * 10) % 2 === 0)
+      && currentCharsCount !== passCharLength)
+      || currentNumsCount === passNumLength
 
     if (isChar) {
       token += characters[Math.floor(Math.random() * characters.length)]
@@ -24,24 +25,8 @@ export default defineEventHandler(async (event) => {
 
     token += digits[Math.floor(Math.random() * digits.length)]
     currentNumsCount++
-    // else {
-    //   token += digits[Math.floor(Math.random() * digits.length)]
-    // }
-
-    // if ((!isChar && currentNumsCount !== passNumLength) || (isChar && currentCharsCount === passCharLength)) {
-    //   token += digits[Math.floor(Math.random() * digits.length)]
-    //   currentNumsCount++
-    //   continue
-    // }
-
-    // token += isChar
-    //   ? characters[Math.floor(Math.random() * characters.length)]
-    //   : digits[Math.floor(Math.random() * digits.length)]
-
-    // isChar ? currentCharsCount++ : currentNumsCount++
   }
-  console.log(currentCharsCount, currentNumsCount)
 
-  setCookie(event, 'token', token)
+  setCookie(event, 'token', token, { maxAge: 999999999 })
   return { success: true }
 })

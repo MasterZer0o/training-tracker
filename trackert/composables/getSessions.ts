@@ -1,10 +1,6 @@
 export async function getSessions(): Promise<Session[]> {
   try {
-    const { BASE_URL } = useRuntimeConfig().public
-
-    const path = `${BASE_URL}/sessions`
-    const response = await fetch(path)
-    const data = await response.json()
+    const data = await $fetch('/sessions')
 
     if ('error' in data)
       throw data

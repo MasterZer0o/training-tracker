@@ -1,27 +1,23 @@
-export async function updateSession(e: any, editing: Ref, loader: Ref, updateError: Ref, data: Session) {
+export async function updateSession(e: any, editing: Ref, loader: Ref, updateError: Ref, data: Record<keyof Omit<Session, 'id' | 'isNew'>, Ref<HTMLElement>>) {
   try {
     editing.value = null
     loader.value = true
     const id = e.target.parentElement.parentElement.dataset.id
-    const { section, date, timeStart, timeEnd, duration }: any = data
+    const { section, date, timeStart, timeEnd, duration } = data
 
     const session: Session = {
       id,
-      section: section.value.querySelector('span').textContent,
-      date: date.value.textContent,
-      timeStart: timeStart.value.textContent,
-      timeEnd: timeEnd.value.textContent,
-      duration: duration.value.textContent
+      section: section.value.querySelector('span')!.textContent!,
+      date: date.value.textContent!,
+      timeStart: timeStart.value.textContent!,
+      timeEnd: timeEnd.value.textContent!,
+      duration: duration.value.textContent!
     }
-    const { BASE_URL } = useRuntimeConfig().public
 
-    const response = await (
-      await fetch(`${BASE_URL}/editsession`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(session)
-      })
-    ).json()
+    const response = await $fetch('/session/edit', {
+      method: 'POST',
+      body: session
+    })
 
     if ('error' in response)
       throw response
@@ -35,7 +31,7 @@ export async function updateSession(e: any, editing: Ref, loader: Ref, updateErr
         const ongoingData: OngoingSession = {
           is: true,
           data: {
-            section: section.value.querySelector('span').textContent,
+            section: section.value.querySelector('span')!.textContent!,
             started: ongoing.data.started
           }
         }

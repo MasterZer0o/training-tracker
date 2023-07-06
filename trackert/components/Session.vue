@@ -4,27 +4,30 @@ const props = defineProps<{
   isNew: boolean
 }>()
 
-const BASE_URL = useRuntimeConfig().public.BASE_URL
-
 const showDot = ref(false)
 const showDotInput = (event: any) => (event.target?.innerText?.length > 0 ? (showDot.value = false) : (showDot.value = true))
-const editing = ref<null | true>(null)
+
+const editing = ref<undefined | true>()
 const loader = ref(false)
 const hideSubmit = ref(false)
 const updateError = ref(false)
 const isNew = ref(false)
-const section = ref(null)
-const date = ref(null)
-const timeStart = ref(null)
-const timeEnd = ref(null)
-const duration = ref(null)
-const data: Session = { section, date, timeStart, timeEnd, duration }
+
+const bodyPartEl = ref() as Ref<HTMLElement>
+const date = ref() as Ref<HTMLElement>
+const timeStart = ref() as Ref<HTMLElement>
+const timeEnd = ref() as Ref<HTMLElement>
+const duration = ref() as Ref<HTMLElement>
+const data: Record<keyof Omit<Session, 'id' | 'isNew'>, Ref<HTMLElement>> = { section: bodyPartEl, date, timeStart, timeEnd, duration }
+
 const _updateSession = (e: Event) => updateSession(e, editing, loader, updateError, data)
 
 const unWatchDot = watchEffect(() => {
   showDot.value = timeEnd.value?.innerText.length === 0
-  if (timeEnd.value !== null)
-    unWatchDot()
+  // if (timeEnd.value !== null)
+  //   unWatchDot()
+
+  // TODO: ^^^
 })
 
 function insertTimeNow(event: any) {
@@ -36,33 +39,35 @@ function insertTimeNow(event: any) {
     calculateDuration(event.target)
     event.target.blur()
   }
-} const showSectionOptions = ref(false)
+}
+const showSectionOptions = ref(false)
 const _editNewContent = (e: any) => editNewContent(e, isNew.value, showDot)
 
-function insertSection(event: any) {
+function insertSection(event: PointerEvent) {
   showSectionOptions.value = !showSectionOptions.value
-  const sectionCell = section.value as HTMLElement
+  const bodyPartCell = bodyPartEl.value
 
-  sectionCell.querySelector('span')!.textContent = event.target.dataset.section
+  bodyPartCell.querySelector('span')!.textContent = (event.target as HTMLElement).dataset.section!
 }
 
-const canOpenSectionOptions = computed(() => isNew.value)
+const canOpenBodyPartOptions = computed(() => isNew.value)
+
 function triggerSectionOptions() {
-  if (editing.value || canOpenSectionOptions.value)
+  if (editing.value || canOpenBodyPartOptions.value)
     showSectionOptions.value = !showSectionOptions.value
 }
 
 function toggleEditing(event: Event) {
   event.stopPropagation()
-  if (editing.value == null)
+
+  if (editing.value === undefined)
     return (editing.value = true)
-  else {
-    if (timeEnd.value.innerText.length === 0) {
-      showDot.value = true
-    }
-    editing.value = null
-    showSectionOptions.value = false
+
+  if (timeEnd.value.innerText.length === 0) {
+    showDot.value = true
   }
+  editing.value = undefined
+  showSectionOptions.value = false
 }
 async function submitNewSession(event: any) {
   const currentRow = event.target.closest('tr')
@@ -73,32 +78,29 @@ async function submitNewSession(event: any) {
 
     const session: Session = {
       id: currentRow.dataset.id,
-      section: section.value.querySelector('span').textContent,
-      date: date.value.textContent,
-      timeStart: timeStart.value.textContent,
-      timeEnd: timeEnd.value.textContent,
-      duration: duration.value.textContent
+      section: bodyPartEl.value.querySelector('span')!.textContent!,
+      date: date.value.textContent!,
+      timeStart: timeStart.value.textContent!,
+      timeEnd: timeEnd.value.textContent!,
+      duration: duration.value.textContent!
     }
 
-    await fetch(`${BASE_URL}/addsession`, {
+    await $fetch('/session/add', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(session)
+      body: session
     })
 
     const ongoingData: OngoingSession = {
       is: true,
       data: {
-        section: section.value.querySelector('span').textContent,
+        section: bodyPartEl.value.querySelector('span')!.textContent!,
         started: `${timeStart.value.textContent}:${new Date().getSeconds()}`
       }
     }
     setOngoing(ongoingData)
 
     loader.value = false
-    editing.value = null
+    editing.value = undefined
     isNew.value = false
     currentRow.classList.remove('new-session')
   }
@@ -111,6 +113,7 @@ async function submitNewSession(event: any) {
 }
 
 isNew.value = !!props.isNew
+
 onMounted(() => {
   if (props.session.isNew) {
     const [...els]: any = document.querySelectorAll('.new-session td:first-child span')
@@ -120,16 +123,14 @@ onMounted(() => {
   }
 
   // ensure new session row comes at the top
-  props.isNew
-    ? document
-      .querySelector('table tbody')
-      .insertAdjacentElement('afterbegin', document.querySelector(`[data-id="${props.session.id}"]`))
-    : ''
+  if (props.isNew)
+    document.querySelector('table tbody')!
+      .insertAdjacentElement('afterbegin', document.querySelector(`[data-id="${props.session.id}"]`)!)
 })
 </script>
 
 <template>
-  <td ref="section" class="section" :class="[editing ? 'editing-session' : null]" @dblclick="triggerSectionOptions">
+  <td ref="bodyPartEl" class="section" :class="[editing ? 'editing-session' : null]" @dblclick="triggerSectionOptions">
     <span :contenteditable="isNew || editing" style="display: block; height: 100%; outline: none"> {{ session.section }}</span>
     <transition name="slide">
       <OptionsMenu v-show="showSectionOptions" @click="insertSection" />
@@ -180,4 +181,3 @@ onMounted(() => {
     <Loader v-if="loader" />
   </td>
 </template>
-../composables/setOngoing

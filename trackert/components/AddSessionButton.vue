@@ -1,11 +1,10 @@
-<template>
-	<button @click="_" class="btn">+</button>
-</template>
-
 <script setup lang="ts">
-import { inject, Ref } from 'vue';
-import { addPlaceholder } from '../composables/newSession';
-
-const _ = () => addPlaceholder(sessions);
-const sessions: Ref = inject('sessions');
+const sessions = inject<Session[]>('sessions')
+const _ = () => addPlaceholder(sessions as any)
 </script>
+
+<template>
+  <button class="btn" @click="_">
+    +
+  </button>
+</template>

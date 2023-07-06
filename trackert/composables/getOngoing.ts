@@ -5,9 +5,9 @@ export function getOngoing(): OngoingSession | null {
     const { ongoingCookieName } = useRuntimeConfig().public
 
     if (cookieExists) {
-      const cookie = cookies!
+      const cookie = cookies
         .split(';')
-        .find((cookieString: string) => cookieString.includes(`${ongoingCookieName}`))
+        .find((cookieString: string) => cookieString.includes(`${ongoingCookieName}`))!
         .split('=')[1]
 
       const data = JSON.parse(cookie)
