@@ -1,7 +1,9 @@
-import { calculateDuration } from './calculateDuration'
+// import { calculateDuration } from './calculateDuration'
 
 export function editNewContent(e: PointerEvent, isNew = true, showDot: Ref) {
   const target = e.target as HTMLElement
+
+  useState<MutationObserver>('observer').value?.disconnect()
 
   if (!target.hasAttribute('contenteditable'))
     return
@@ -13,9 +15,13 @@ export function editNewContent(e: PointerEvent, isNew = true, showDot: Ref) {
   if (isNew === true)
     window.scrollTo({ top: 0 })
 
-  const observer = new MutationObserver(() => calculateDuration(e.target as HTMLElement)
-  )
-  if (target.classList.contains('date') || target.classList.contains('section')) {
+  console.log('target:', target)
+
+  const observer = new MutationObserver(() => calculateDuration(target))
+
+  useState<MutationObserver>('observer').value = observer
+
+  if (Array.from(target.classList).some(className => ['timeStart', 'timeEnd'].includes(className))) {
     observer.observe(target, { characterData: true, subtree: true })
   }
 }

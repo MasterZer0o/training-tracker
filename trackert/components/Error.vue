@@ -2,10 +2,12 @@
 defineProps({
   message: String
 })
+
+const error = useActionError()
 </script>
 
 <template>
-  <div class="error-box" @click="useIsError().value = false">
-    <span class="error-box__message">{{ message }}</span>
+  <div class="error-box" @click="error.message = null">
+    <span class="error-box__message">{{ error.message }}</span>
   </div>
 </template>

@@ -1,25 +1,17 @@
 <script setup lang="ts">
-// defineProps<{
-//   sessions: Session[]
-//   isNew: boolean
-// }>()
-
-const criticalErrorMessage = useRuntimeConfig().public.criticalErrorMessage
-
 const sessions = ref<Session[]>([])
 const errorCritical = ref<boolean>(false)
 
 async function refresh(e: any) {
   try {
-    useIsError().value = false
+    useActionError().value.message = null
     e.target.classList.toggle('refreshing')
     const data: Session[] = await getSessions()
     sessions.value = data
     e.target.classList.toggle('refreshing')
   }
   catch (error) {
-    useIsError().value = true
-    useErrorMessage().value = 'Failed to refresh data.'
+    useActionError().value.message = 'Failed to refresh data.'
   }
 }
 onMounted(() => _getSessions())
@@ -42,29 +34,31 @@ provide('sessions', sessions)
 <template>
   <div class="upper">
     <span v-if="sessions.length > 0 && !useLoading().value" class="sessions-counter">{{ sessions.length }}</span>
-    <RefreshButton v-show="!errorCritical && !useLoading()" @click="refresh" />
+    <RefreshButton v-show="!errorCritical && !useLoading().value" @click="refresh" />
     <AddSessionButton v-if="!useLoading().value && !errorCritical" />
   </div>
-  <Loader v-if="useLoading().value && useIsError().value === false && errorCritical === false" />
+  <Loader v-if="useLoading().value && useActionError().value.message === null && errorCritical === false" />
 
-  <transition name="showUp">
-    <table :style="useLoading().value || errorCritical ? 'margin-top:2em;' : undefined">
-      <Headers />
+  <ClientOnly v-if="!useLoading().value">
+    <transition name="showUp" appear>
+      <table :style="useLoading().value || errorCritical ? 'margin-top:2em;' : undefined">
+        <Headers />
 
-      <tbody>
-        <tr
-          v-for="session in sessions"
-          :key="session.id"
-          :data-id="session.id"
-          class="row" :class="[session.isNew ? 'new-session' : null]"
-          spellcheck="false"
-        >
-          <Session :key="session.id" :is-new="session.isNew || false" :session="session" />
-        </tr>
-      </tbody>
-    </table>
-  </transition>
+        <tbody>
+          <tr
+            v-for="session in sessions"
+            :key="session.id"
+            :data-id="session.id"
+            class="row" :class="[session.isNew ? 'new-session' : null]"
+            spellcheck="false"
+          >
+            <Session :key="session.id" :is-new="session.isNew || false" :session="session" />
+          </tr>
+        </tbody>
+      </table>
+    </transition>
+  </ClientOnly>
   <h2 v-if="errorCritical" style="font-weight: bold; color: red; text-align: center">
-    {{ criticalErrorMessage }}
+    Something went wrong
   </h2>
 </template>

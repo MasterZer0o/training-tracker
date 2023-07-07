@@ -19,6 +19,7 @@
 table {
   border-spacing: 0 5px;
   text-align: center;
+  margin-bottom: 0.5em;
 }
 
 .edit-icon {
@@ -149,7 +150,7 @@ button.close-app {
 
 .showUp-enter-active,
 .showUp-leave-active {
-  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
   transform: translateY(0px);
 }
 

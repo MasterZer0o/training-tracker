@@ -40,13 +40,12 @@ export async function updateSession(e: any, editing: Ref, loader: Ref, updateErr
     }
 
     loader.value = false
+    useState<MutationObserver>('observer').value?.disconnect()
   }
   catch (error: any) {
-    console.error(error)
-
     loader.value = false
-    useIsError().value = true
-    useErrorMessage().value = 'failed to edit session'
+
     updateError.value = true
+    useActionError().value.message = 'Failed to edit session'
   }
 }

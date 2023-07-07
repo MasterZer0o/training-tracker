@@ -5,7 +5,9 @@ const props = defineProps<{
 }>()
 
 const showDot = ref(false)
-const showDotInput = (event: any) => (event.target?.innerText?.length > 0 ? (showDot.value = false) : (showDot.value = true))
+
+const showDotInput = (event: Event) =>
+  showDot.value = (event.target as HTMLElement).innerText?.length === 0
 
 const editing = ref<undefined | true>()
 const loader = ref(false)
@@ -18,7 +20,8 @@ const date = ref() as Ref<HTMLElement>
 const timeStart = ref() as Ref<HTMLElement>
 const timeEnd = ref() as Ref<HTMLElement>
 const duration = ref() as Ref<HTMLElement>
-const data: Record<keyof Omit<Session, 'id' | 'isNew'>, Ref<HTMLElement>> = { section: bodyPartEl, date, timeStart, timeEnd, duration }
+const data: Record<keyof Omit<Session, 'id' | 'isNew'>, Ref<HTMLElement>>
+  = { section: bodyPartEl, date, timeStart, timeEnd, duration }
 
 const _updateSession = (e: Event) => updateSession(e, editing, loader, updateError, data)
 
@@ -69,8 +72,8 @@ function toggleEditing(event: Event) {
   editing.value = undefined
   showSectionOptions.value = false
 }
-async function submitNewSession(event: any) {
-  const currentRow = event.target.closest('tr')
+async function submitNewSession(event: Event) {
+  const currentRow = (event.target as HTMLElement).closest('tr')!
 
   try {
     hideSubmit.value = true
@@ -97,7 +100,8 @@ async function submitNewSession(event: any) {
         started: `${timeStart.value.textContent}:${new Date().getSeconds()}`
       }
     }
-    setOngoing(ongoingData)
+
+    timeEnd.value.textContent!.length === 0 && setOngoing(ongoingData)
 
     loader.value = false
     editing.value = undefined
@@ -105,8 +109,7 @@ async function submitNewSession(event: any) {
     currentRow.classList.remove('new-session')
   }
   catch (error) {
-    useErrorMessage().value = 'Failed to submit new session'
-    useIsError().value = true
+    useActionError().value.message = 'Failed to submit new session'
     loader.value = false
     updateError.value = true
   }
@@ -137,12 +140,14 @@ onMounted(() => {
     </transition>
   </td>
 
-  <td ref="date" class="date" :contenteditable="isNew || editing" @click="_editNewContent" @focus="_editNewContent">
+  <td ref="date" class="date" :contenteditable="isNew || editing" @click="_editNewContent">
     {{ session.date }}
   </td>
-  <td ref="timeStart" class="timeStart" :contenteditable="isNew || editing" @click="_editNewContent" @focus="_editNewContent">
+
+  <td ref="timeStart" class="timeStart" :contenteditable="isNew || editing" @click="_editNewContent">
     {{ session.timeStart }}
   </td>
+
   <td
     ref="timeEnd" class="timeEnd"
     :class="[showDot ? 'dot' : null]"
@@ -150,14 +155,15 @@ onMounted(() => {
     @input="showDotInput"
     @focusout="showDotInput"
     @click="_editNewContent"
-    @focus="_editNewContent"
     @dblclick="insertTimeNow"
   >
     {{ session.timeEnd }}
   </td>
+
   <td ref="duration" class="duration">
     {{ session.duration }}
   </td>
+
   <td v-if="isNew">
     <img v-if="!loader && !hideSubmit" class="edit-icon" src="../assets/checkbox.svg" alt="" @click="submitNewSession" />
     <img
@@ -167,6 +173,7 @@ onMounted(() => {
       alt="edit session"
       @click="toggleEditing"
     />
+
     <img v-if="editing" class="edit-icon" src="../assets/checkbox.svg" alt="" @click="_updateSession" />
 
     <img v-if="updateError" src="../assets/alert.svg" class="alert-icon" alt="" />

@@ -59,8 +59,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       ongoingCookieName: 'ongoing',
-      criticalErrorMessage: 'Something went wrong',
-      BASE_URL: 'http://192.168.0.22:5000'
     },
     charsNumIter: 25,
     passCharLength: 14,

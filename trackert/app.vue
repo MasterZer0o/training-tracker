@@ -1,29 +1,10 @@
 <script setup lang="ts">
-// const securityCheckPassed = ref<boolean>(false)
-
 // dynamic components. Get imported only when authenticated.
 const authError = ref<AuthError>({ is: false })
 
 onBeforeMount(async () => {
   window.addEventListener('offline', () => (useNetStatus().value = 'offline'))
-
-  // if (securityCheckPassed.value === true) {
-  //   const ongoing = getOngoing()
-  //   if (ongoing !== null) {
-  //     useOngoingSession().value = {
-  //       is: ongoing.is,
-  //       data: ongoing.data
-  //     }
-  //   }
-  //   else resetOngoing()
-  // }
 })
-// process.client && $fetch('/auth', {
-//   method: 'post',
-//   body: {
-//     pass: '123'
-//   }
-// })
 
 if (process.server) {
   const event = useRequestEvent()
@@ -47,11 +28,6 @@ async function handleAuth(pass: string) {
           is: true
         }
       }
-
-      // if (response === 'passed') {
-      //   securityCheckPassed.value = true
-      //   localStorage.setItem('pass', Math.random().toString(36).slice(2))
-      // }
     }
   }
   catch (error) {

@@ -1,12 +1,8 @@
 <script setup lang="ts">
-const props = defineProps<{
-data: {
-    section: string
-    started: string
-}
-}>()
+const { data } = useOngoingSession().value
+
 // split for started: hour, minutes, seconds.
-const started = props.data.started.split(':')
+const started = data.started.split(':')
 
 const startedHour = Number.parseInt(started[0])
 const startedMinutes = Number.parseInt(started[1])
@@ -42,14 +38,14 @@ function updateTime() {
   }
 }
 
-const updater = setInterval(() => updateTime(), 1000)
-onUnmounted(() => clearInterval(updater))
+const timerUpdate = setInterval(() => updateTime(), 1000)
+onUnmounted(() => clearInterval(timerUpdate))
 </script>
 
 <template>
   <div class="ongoing-bar">
     <span>
-      <strong>{{ data.section }}</strong></span>
+      <strong>{{ useOngoingSession().value.data.section }}</strong></span>
     <span>
       <strong>
         {{ durationHours || null }}

@@ -8,12 +8,12 @@ td {
 	transition: background-color 800ms ease-in-out;
 	outline: none;
 	&:first-child {
-		border-radius: 6px 0 0 6px;
+		border-radius: 4px 0 0 4px;
 		padding: 0.4em 0.3em;
 	}
 	&:last-child {
 		overflow: hidden;
-		border-radius: 0px 6px 6px 0px;
+		border-radius: 0px 4px 4px 0px;
 		width: 30px;
 		border-right: none;
 		padding: 0;
@@ -89,11 +89,11 @@ th {
 	max-width: 115px;
 	position: relative;
 	&:first-child {
-		border-radius: 7px 0 0 7px;
+		border-radius: 5px 0 0 5px;
 		overflow: hidden;
 	}
 	&:last-child {
-		border-radius: 0 7px 7px 0;
+		border-radius: 0 5px 5px 0;
 		overflow: hidden;
 	}
 	// separators in thead

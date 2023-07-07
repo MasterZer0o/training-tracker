@@ -15,16 +15,14 @@ if (process.client) {
 <template>
   <ClientOnly>
     <transition name="ongoing" appear>
-      <OngoingSession v-if="useOngoingSession().value.is" :data="useOngoingSession().value.data" />
+      <OngoingSession v-if="useOngoingSession().value.is" />
     </transition>
   </ClientOnly>
 
   <TheHeader />
 
-  <transition name="showUp" appear>
-    <div class="container">
-      <Sessions />
-      <Error v-if="useIsError().value" :message="useErrorMessage().value" />
-    </div>
-  </transition>
+  <div class="container">
+    <Sessions />
+    <Error v-if="useActionError().value.message !== null" />
+  </div>
 </template>

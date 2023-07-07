@@ -6,7 +6,7 @@ declare global {
   }
 
   export interface Session {
-    id?: number
+    id?: string | number
     section: string
     date: string
     timeStart: string

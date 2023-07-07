@@ -6,6 +6,8 @@ export default defineEventHandler(async () => {
     if ('error' in db || db.data === null)
       throw new Error('Err')
 
+    // await new Promise(res => setTimeout(res, 2000))
+
     return db.data
   }
   catch (error) {

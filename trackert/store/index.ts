@@ -1,6 +1,6 @@
 export const useLoading = () => useState<boolean>('isLoading', () => true)
 
-export const useIsError = () => useState<boolean>('isError', () => false) // controlling bottom box error
+export const useActionError = () => useState<{ message: string | null } >('actionError', () => ({ message: null })) // bottom error state
 
 export const useErrorMessage = () => useState<string>('errorMessage', () => '') // bottom box error message
 
