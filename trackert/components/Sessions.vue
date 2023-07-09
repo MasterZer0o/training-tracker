@@ -2,18 +2,20 @@
 const sessions = ref<Session[]>([])
 const errorCritical = ref<boolean>(false)
 
-async function refresh(e: any) {
+async function refresh(e: PointerEvent) {
   try {
     useActionError().value.message = null
-    e.target.classList.toggle('refreshing')
+    const target = e.target as HTMLElement
+    target.classList.toggle('refreshing')
     const data: Session[] = await getSessions()
     sessions.value = data
-    e.target.classList.toggle('refreshing')
+    target.classList.toggle('refreshing')
   }
   catch (error) {
     useActionError().value.message = 'Failed to refresh data.'
   }
 }
+
 onMounted(() => _getSessions())
 async function _getSessions() {
   try {
@@ -41,7 +43,9 @@ provide('sessions', sessions)
 
   <ClientOnly v-if="!useLoading().value">
     <transition name="showUp" appear>
-      <table :style="useLoading().value || errorCritical ? 'margin-top:2em;' : undefined">
+      <table
+        :style="useLoading().value || errorCritical ? 'margin-top:2em;' : undefined"
+      >
         <Headers />
 
         <tbody>

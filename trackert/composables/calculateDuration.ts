@@ -4,8 +4,6 @@ export function calculateDuration(target: HTMLElement) {
   const durationCell: Node = timeEndCell.nextSibling!
   const timeStartCell: Node = timeEndCell.previousSibling!
 
-  console.log('ran')
-
   setTimeout(() => {
     if (timeEndCell.textContent!.match(timePattern) && timeStartCell.textContent!.match(timePattern)) {
       const now: Date = new Date()
@@ -32,6 +30,6 @@ export function calculateDuration(target: HTMLElement) {
 
       durationCell.textContent = differenceHours === 0 ? `${differenceMinutes}m` : `${differenceHours}h ${differenceMinutes}m`
     }
-    else durationCell.textContent = 'invalid'
+    else durationCell.textContent = '###'
   }, 500)
 }

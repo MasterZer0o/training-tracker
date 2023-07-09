@@ -9,19 +9,19 @@ const showDot = ref(false)
 const showDotInput = (event: Event) =>
   showDot.value = (event.target as HTMLElement).innerText?.length === 0
 
-const editing = ref<undefined | true>()
+const editing = ref<undefined | true>() // FIXME: remove true
 const loader = ref(false)
 const hideSubmit = ref(false)
 const updateError = ref(false)
-const isNew = ref(false)
+const isNew = ref(!!props.isNew)
 
 const bodyPartEl = ref() as Ref<HTMLElement>
-const date = ref() as Ref<HTMLElement>
+const dateEl = ref() as Ref<HTMLElement>
 const timeStart = ref() as Ref<HTMLElement>
 const timeEnd = ref() as Ref<HTMLElement>
 const duration = ref() as Ref<HTMLElement>
 const data: Record<keyof Omit<Session, 'id' | 'isNew'>, Ref<HTMLElement>>
-  = { section: bodyPartEl, date, timeStart, timeEnd, duration }
+  = { section: bodyPartEl, date: dateEl, timeStart, timeEnd, duration }
 
 const _updateSession = (e: Event) => updateSession(e, editing, loader, updateError, data)
 
@@ -82,7 +82,7 @@ async function submitNewSession(event: Event) {
     const session: Session = {
       id: currentRow.dataset.id,
       section: bodyPartEl.value.querySelector('span')!.textContent!,
-      date: date.value.textContent!,
+      date: dateEl.value.textContent!,
       timeStart: timeStart.value.textContent!,
       timeEnd: timeEnd.value.textContent!,
       duration: duration.value.textContent!
@@ -103,19 +103,18 @@ async function submitNewSession(event: Event) {
 
     timeEnd.value.textContent!.length === 0 && setOngoing(ongoingData)
 
-    loader.value = false
     editing.value = undefined
     isNew.value = false
     currentRow.classList.remove('new-session')
   }
   catch (error) {
     useActionError().value.message = 'Failed to submit new session'
-    loader.value = false
     updateError.value = true
   }
+  finally {
+    loader.value = false
+  }
 }
-
-isNew.value = !!props.isNew
 
 onMounted(() => {
   if (props.session.isNew) {
@@ -134,13 +133,13 @@ onMounted(() => {
 
 <template>
   <td ref="bodyPartEl" class="section" :class="[editing ? 'editing-session' : null]" @dblclick="triggerSectionOptions">
-    <span :contenteditable="isNew || editing" style="display: block; height: 100%; outline: none"> {{ session.section }}</span>
+    <span :contenteditable="isNew || editing"> {{ session.section }}</span>
     <transition name="slide">
       <OptionsMenu v-show="showSectionOptions" @click="insertSection" />
     </transition>
   </td>
 
-  <td ref="date" class="date" :contenteditable="isNew || editing" @click="_editNewContent">
+  <td ref="dateEl" class="date" :contenteditable="isNew || editing" @click="_editNewContent">
     {{ session.date }}
   </td>
 
@@ -166,7 +165,7 @@ onMounted(() => {
 
   <td v-if="isNew">
     <img v-if="!loader && !hideSubmit" class="edit-icon" src="../assets/checkbox.svg" alt="" @click="submitNewSession" />
-    <img
+    <EditIcon
       v-if="hideSubmit && !loader && !updateError"
       class="edit-icon"
       src="../assets/edit.svg"
@@ -181,7 +180,7 @@ onMounted(() => {
     <Loader v-if="loader" />
   </td>
   <td v-else :class="editing ? 'icons--editing' : null">
-    <img v-show="!loader && !updateError" class="edit-icon" src="../assets/edit.svg" alt="" @click="toggleEditing" />
+    <EditIcon v-show="!loader && !updateError" class="edit-icon" src="../assets/edit.svg" alt="" @click="toggleEditing" />
 
     <img v-if="editing" class="edit-icon" src="../assets/checkbox.svg" alt="update session" @click="_updateSession" />
     <img v-if="updateError" src="../assets/alert.svg" class="alert-icon" alt="" />

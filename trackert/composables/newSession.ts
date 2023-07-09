@@ -1,6 +1,4 @@
-// import { calculateDuration } from './calculateDuration'
-
-export function editNewContent(e: PointerEvent, isNew = true, showDot: Ref) {
+export function editNewContent(e: PointerEvent, isNew = true, showDot: Ref<boolean>) {
   const target = e.target as HTMLElement
 
   useState<MutationObserver>('observer').value?.disconnect()
@@ -14,8 +12,6 @@ export function editNewContent(e: PointerEvent, isNew = true, showDot: Ref) {
 
   if (isNew === true)
     window.scrollTo({ top: 0 })
-
-  console.log('target:', target)
 
   const observer = new MutationObserver(() => calculateDuration(target))
 
