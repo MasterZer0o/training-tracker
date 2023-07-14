@@ -19,9 +19,7 @@ if (process.client) {
     </transition>
   </ClientOnly>
 
-  <header>
-    <h1>Training Tracker</h1>
-  </header>
+  <TheHeader />
 
   <div class="container">
     <Sessions />

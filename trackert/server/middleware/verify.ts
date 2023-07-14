@@ -5,8 +5,6 @@ export default defineEventHandler((event) => {
     const { passNumLength, passCharLength } = useRuntimeConfig()
     const token = getCookie(event, 'token')
 
-    console.log({ token })
-
     if (!token) {
       event.context.auth = false
       return

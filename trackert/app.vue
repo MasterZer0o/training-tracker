@@ -1,7 +1,10 @@
 <script setup lang="ts">
+// dynamic components. Get imported only when authenticated.
 const authError = ref<AuthError>({ is: false })
 
-onBeforeMount(() => window.addEventListener('offline', () => (useNetStatus().value = 'offline')))
+onBeforeMount(async () => {
+  window.addEventListener('offline', () => (useNetStatus().value = 'offline'))
+})
 
 if (process.server) {
   const event = useRequestEvent()
@@ -17,7 +20,6 @@ async function handleAuth(pass: string) {
           pass
         }
       })
-
       if (response.success)
         useState('auth').value = true
 
