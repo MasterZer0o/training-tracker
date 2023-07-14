@@ -1,0 +1,26 @@
+{
+  "name": "training-tracker-demo",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "SET pass=11& SET PREVIEW=true & nuxt preview",
+    "postinstall": "nuxt prepare",
+    "deps": "yarn upgrade-interactive --latest"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.39.7",
+    "@types/node": "^20.4.1",
+    "@vueuse/nuxt": "^10.2.1",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.44.0",
+    "nuxt": "npm:nuxt3@latest",
+    "sass": "^1.63.6",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "lowdb": "3"
+  }
+}

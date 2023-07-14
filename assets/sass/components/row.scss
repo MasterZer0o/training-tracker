@@ -1,0 +1,16 @@
+@use './cell.scss';
+@use '../base.scss' as *;
+
+.headers-row {
+	position: sticky;
+  top: 0px;
+	z-index: 1;
+	& th:nth-child(5) {
+		padding: 0.4em 0.5em;
+	}
+}
+tr.new-session {
+	td {
+		background-color: $td-bg-lighter;
+	}
+}
