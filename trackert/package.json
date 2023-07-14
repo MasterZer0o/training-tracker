@@ -2,7 +2,6 @@
   "name": "training-tracker",
   "version": "3.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -14,9 +13,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^0.39.7",
     "@nuxt/devtools": "latest",
-    "@types/cron": "^2.0.1",
-    "@types/node": "^20.4.1",
-    "@vueuse/nuxt": "^10.2.1",
+    "@types/node": "^20.4.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.44.0",
     "nuxt": "npm:nuxt3@latest",
@@ -24,8 +21,6 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "cron": "^2.3.1",
-    "googleapis": "^120.0.0",
     "lowdb": "3"
   }
 }

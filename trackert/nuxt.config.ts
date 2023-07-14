@@ -3,17 +3,8 @@ export default defineNuxtConfig({
   imports: {
     dirs: ['store']
   },
-  experimental: {
-    inlineSSRStyles: false
-  },
-  nitro: {
-    compressPublicAssets: {
-      brotli: true
-    }
-  },
   app: {
     rootId: 'app',
-    buildAssetsDir: '/',
     head: {
       title: 'Training Tracker',
       htmlAttrs: {
@@ -36,7 +27,7 @@ export default defineNuxtConfig({
 
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Sofia+Sans&display=swap'
+          href: 'https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,700;1,400&display=swap'
         },
         {
           rel: 'stylesheet',
@@ -58,11 +49,11 @@ export default defineNuxtConfig({
     build: {
       rollupOptions: {
         output: {
-          assetFileNames: 'assets/[hash][extname]',
-          chunkFileNames: '[hash].js',
-          entryFileNames: '[hash].js',
-        },
-      },
+          assetFileNames: 'public/assets/[hash][extname]',
+          chunkFileNames: 'public/[hash].js',
+          entryFileNames: 'public/[hash].js'
+        }
+      }
     },
   },
   runtimeConfig: {
