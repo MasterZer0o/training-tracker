@@ -1,51 +1,30 @@
 {
-	"name": "training-tracker",
-	"private": true,
-	"version": "2.1.0",
-	"type": "module",
-	"scripts": {
-		"preview": "vite preview",
-		"dev:client": "vite --host",
-		"dev:api": "conc \"swc --ignore **/**/sessions.json -w api -d dev\" \"SET NODE_ENV=development&&nodemon --ignore dev/sessions.json --watch dev dev/app.js\" ",
-		"build:client": "SET NODE_ENV=production&&vue-tsc --noEmit && vite build",
-		"build:server": "SET NODE_ENV=production&&swc api -d server",
-		"old:build:server": "SET NODE_ENV=production&&npx tsc api/app.ts --outDir server --target esnext --module nodenext",
-		"old:dev:api": "SET NODE_ENV=development&&nodemon --ignore node_modules/ --ignore api/sessions.json --watch api/ --exec ts-node-esm api/app.ts"
-	},
-	"dependencies": {
-		"compression": "^1.7.4",
-		"cors": "^2.8.5",
-		"cron": "^2.0.0",
-		"dotenv": "^16.0.1",
-		"express": "^4.18.1",
-		"googleapis": "^105.0.0",
-		"handlebars": "^4.7.7",
-		"helmet": "^5.1.0",
-		"lowdb": "^3.0.0",
-		"node-fetch": "^3.2.6",
-		"nodemailer": "^6.7.8",
-		"vue": "^3.2.25"
-	},
-	"devDependencies": {
-		"@swc/cli": "^0.1.57",
-		"@swc/core": "^1.2.248",
-		"@types/compression": "^1.7.2",
-		"@types/cors": "^2.8.12",
-		"@types/cron": "^2.0.0",
-		"@types/express": "^4.17.13",
-		"@types/handlebars": "^4.1.0",
-		"@types/node": "^17.0.43",
-		"@types/nodemailer": "^6.4.5",
-		"@vitejs/plugin-vue": "^2.3.3",
-		"autoprefixer": "^10.4.7",
-		"chokidar": "^3.5.3",
-		"concurrently": "^7.4.0",
-		"nodemon": "^2.0.18",
-		"sass": "^1.52.3",
-		"typescript": "^4.7.4",
-		"unplugin-vue-components": "^0.19.6",
-		"vite": "^3.1.0",
-		"vite-plugin-html": "^3.2.0",
-		"vue-tsc": "^0.40.9"
-	}
+  "name": "training-tracker",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "SET pass=11& SET PREVIEW=true & nuxt preview",
+    "postinstall": "nuxt prepare",
+    "deps": "yarn upgrade-interactive --latest"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.39.7",
+    "@nuxt/devtools": "latest",
+    "@types/cron": "^2.0.1",
+    "@types/node": "^20.4.2",
+    "@vueuse/nuxt": "^10.2.1",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.44.0",
+    "nuxt": "npm:nuxt3@latest",
+    "sass": "^1.63.6",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "cron": "^2.3.1",
+    "googleapis": "^120.0.0",
+    "lowdb": "3"
+  }
 }
